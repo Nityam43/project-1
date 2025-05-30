@@ -1,11 +1,11 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { recipecontext } from "../context/RecipeContext";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 const SingleRecipe = () => {
-    const { data, setdata } = useContext(recipecontext);
+  const { data, setdata } = useContext(recipecontext);
   const params = useParams();
   const recipe = data.find((recipe) => params.id == recipe.id);
   const navigate = useNavigate();
@@ -15,8 +15,8 @@ const SingleRecipe = () => {
       chef: recipe.chef,
       image: recipe.image,
       desc: recipe.desc,
-      inst:recipe.inst,
-      ingr:recipe.ingr,
+      inst: recipe.inst,
+      ingr: recipe.ingr,
     },
   });
 
@@ -35,6 +35,13 @@ const SingleRecipe = () => {
     navigate("/recipes");
   };
 
+  useEffect(() => {
+    console.log("singleRecipe.jsx Mounted");
+    return () => {
+      console.log("singleRecipe.jsx Unmounted");
+    };
+  }, []);
+
   return recipe ? (
     <div className="w-full flex">
       <div className="left w-1/2 p-2">
@@ -48,7 +55,6 @@ const SingleRecipe = () => {
         <input
           className="block border-b outline-0 p-2"
           {...register("image")}
-          
           type="url"
           placeholder="Enter Image url"
         />
