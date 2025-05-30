@@ -22,7 +22,7 @@ const Home = () => {
   return (
     <div>
       <h1>Home</h1>
-      <button onClick={getproduct}>Get Product</button>
+      <button onClick={getproduct}>Get Products</button>
     </div>
   )
 }

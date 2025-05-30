@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { recipecontext } from "../context/RecipeContext";
 import { useForm } from "react-hook-form";
@@ -33,8 +33,30 @@ const SingleRecipe = () => {
     const filterdata = data.filter((r) => r.id != params.id);
     setdata(filterdata);
     localStorage.setItem("recipes", JSON.stringify(filterdata));
+
+    const updatedFav = favourite.filter((f) => f.id !== params.id);
+    setFavourite(updatedFav);
+    localStorage.setItem("fav", JSON.stringify(updatedFav));
+
     toast.success("Recipe Deleted");
     navigate("/recipes");
+  };
+
+  const [favourite, setFavourite] = useState(
+    JSON.parse(localStorage.getItem("fav")) || []
+  );
+
+  const FavHandler = () => {
+    let copyFav = [...favourite];
+    copyFav.push(recipe);
+    setFavourite(copyFav);
+    localStorage.setItem("fav", JSON.stringify(copyFav));
+  };
+
+  const UnFavHandler = () => {
+    const filterFav = favourite.filter((f) => f.id != recipe?.id);
+    setFavourite(filterFav);
+    localStorage.setItem("fav", JSON.stringify(filterFav));
   };
 
   useEffect(() => {
@@ -42,11 +64,22 @@ const SingleRecipe = () => {
     return () => {
       console.log("singleRecipe.jsx Unmounted");
     };
-  }, []);
+  }, [favourite]);
 
   return recipe ? (
     <div className="w-full flex">
-      <div className="left w-1/2 p-2">
+      <div className=" relative left w-1/2 p-10">
+        {favourite.find((f) => f.id == recipe?.id) ? (
+          <i
+            onClick={UnFavHandler}
+            className="right-[5%] absolute text-3xl text-red-400 ri-heart-fill"
+          ></i>
+        ) : (
+          <i
+            onClick={FavHandler}
+            className="right-[5%] absolute text-3xl text-red-400 ri-heart-line"
+          ></i>
+        )}
         <h1 className="text-5xl font-black">{recipe.title}</h1>
         <img className="h-[20vh]" src={recipe.image} />
         <h1>{recipe.chef}</h1>
